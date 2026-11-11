@@ -73,6 +73,7 @@ python -m http.server 5500 --directory todo-app
 │   ├── PRD.md · TRD.md · TASKS.md   # todo-app2 기획 · 설계 · 작업 문서
 │   └── PROMPTS.md          # PRD로 앱을 만드는 5단계 프롬프트
 ├── todo-app3/              # 5단계 프롬프트로 만든 앱 (index.html · style.css · app.js)
+│   └── TRD.md · TASKS.md   # todo-app3 설계 · 작업 문서 (PRD는 todo-app2와 공유)
 ├── .github/workflows/
 │   └── pages.yml           # GitHub Pages 자동 배포
 ├── .claude/launch.json     # 로컬 미리보기 서버 설정

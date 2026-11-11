@@ -375,7 +375,9 @@ clearDone.addEventListener("click", () => {
 // ───── 시작 ─────
 const today = new Date();
 const dateLabel = el("dateLabel");
-dateLabel.dateTime = today.toISOString().slice(0, 10);
+// toISOString()은 UTC라서 한국 시간 오전 9시 전에는 전날이 된다 → 현지 날짜로 만든다
+const pad2 = (n) => String(n).padStart(2, "0");
+dateLabel.dateTime = `${today.getFullYear()}-${pad2(today.getMonth() + 1)}-${pad2(today.getDate())}`;
 dateLabel.textContent = today.toLocaleDateString("ko-KR", {
   year: "numeric",
   month: "long",
