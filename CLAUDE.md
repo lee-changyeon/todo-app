@@ -4,15 +4,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-A personal todo web app (Korean UI) built with plain HTML5 / CSS3 / vanilla JavaScript (ES2020). There is no npm, no bundler, no framework, no module system, and no automated test suite. The app is the three files in `todo-app/` (`index.html`, `style.css`, `app.js`). The repo root holds the planning docs. `todo-app2/` is an empty placeholder and is not deployed.
+A personal todo web app (Korean UI) built with plain HTML5 / CSS3 / vanilla JavaScript (ES2020). There is no npm, no bundler, no framework, no module system, and no automated test suite. There are two independent versions of the app, each made of `index.html`, `style.css`, and `app.js`:
+
+- `todo-app/` — the original app. Its PRD/TRD/TASKS docs are at the repo root. This is the only folder deployed to GitHub Pages.
+- `todo-app2/` — a rewrite planned from scratch, with its own `PRD.md`, `TRD.md`, and `TASKS.md` inside the folder. It is not deployed. It uses the `localStorage` keys `todos2` / `todos2Filter`, so its data never mixes with `todo-app/` (`todos` / `todoFilter`).
+
+Both versions share the architecture described below. When working on one, update that version's own docs.
 
 ## Commands
 
-- **Run locally:** `python -m http.server 5500 --directory todo-app`, then open http://localhost:5500. The same command is configured in `.claude/launch.json`. Opening `todo-app/index.html` directly in a browser also works, but `file://` and `localhost` keep separate `localStorage` data.
+- **Run locally:** `python -m http.server 5500 --directory todo-app` (or `--directory todo-app2`), then open http://localhost:5500. The same command is configured in `.claude/launch.json`. Opening `todo-app/index.html` directly in a browser also works, but `file://` and `localhost` keep separate `localStorage` data.
 - **Deploy:** pushing to `main` triggers `.github/workflows/pages.yml`, which uploads **only the `todo-app/` folder** to GitHub Pages (https://lee-changyeon.github.io/todo-app/).
-- **Test:** testing is manual, in the browser, against the scenarios T-01 to T-13 in `TRD.md` §10.2. Inspect or edit stored data under DevTools → Application → Local Storage (keys `todos` and `todoFilter`).
+- **Test:** testing is manual, in the browser, against the scenarios in `TRD.md` §10.2 (`todo-app/`) or `todo-app2/TRD.md` §8.2. Inspect or edit stored data under DevTools → Application → Local Storage (keys `todos` / `todoFilter`, or `todos2` / `todos2Filter`).
 
-## Architecture (`todo-app/app.js`)
+## Architecture (`app.js`, both versions)
 
 Data flows one way, and the `todos` array is the single source of truth. The DOM holds no state.
 

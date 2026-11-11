@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오늘의 할 일</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="app-header">
+      <h1>📝 오늘의 할 일</h1>
+      <p class="today" id="today"></p>
+    </header>
+
+    <section class="progress" aria-label="진행률">
+      <div class="progress-summary">
+        <span id="progressText">완료 0 / 0 (0%)</span>
+        <span id="celebrate" class="celebrate" hidden>🎉 모두 완료!</span>
+      </div>
+      <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar">
+        <div class="bar-fill" id="progressFill"></div>
+      </div>
+      <ul class="category-progress" id="categoryProgress"></ul>
+    </section>
+
+    <form class="add-form" id="addForm" autocomplete="off">
+      <input type="text" id="addInput" maxlength="100" placeholder="할 일을 입력하세요" aria-label="할 일 내용">
+      <select id="addCategory" aria-label="카테고리"></select>
+      <button type="submit" class="btn-primary">추가</button>
+    </form>
+
+    <nav class="filters" id="filters" aria-label="카테고리 필터"></nav>
+
+    <ul class="todo-list" id="todoList"></ul>
+    <p class="empty" id="emptyMessage" hidden>할 일을 추가해 보세요 ✍️</p>
+
+    <footer class="app-footer">
+      <button type="button" class="btn-text" id="clearDone">완료 항목 지우기</button>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
