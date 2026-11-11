@@ -244,3 +244,38 @@ input[type="text"]:focus, select:focus {
   .todo-item.editing { flex-wrap: wrap; }
   .todo-item.editing .edit-input { flex-basis: 100%; }
 }
+
+/* ===== 반응형 보강 (2026-11-11 UI 점검) ===== */
+
+/* 터치 대상 40px 이상 (모든 화면) */
+.icon-btn { width: 40px; height: 40px; }
+.todo-item input[type="checkbox"] { width: 22px; height: 22px; }
+.filter { min-height: 40px; }
+.btn-text { min-height: 40px; padding: 0 8px; }
+input[type="text"], select { font-size: 1rem; } /* 16px 미만이면 iOS에서 누를 때 화면이 확대됨 */
+
+@media (max-width: 480px) {
+  /* 필터 탭: 4개가 한 줄에 같은 너비로 (320px에서 "공부" 탭이 잘리던 문제) */
+  .filters { overflow-x: visible; }
+  .filter { flex: 1 1 0; min-width: 0; padding: 6px 4px; }
+
+  /* 목록 항목: 체크박스 | (배지 위 · 내용 아래) | ✏️ 🗑 — 내용 칸을 넓게 */
+  .todo-item:not(.editing) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      "check badge edit del"
+      "check text  edit del";
+    column-gap: 8px;
+    row-gap: 2px;
+    align-items: center;
+  }
+  .todo-item:not(.editing) > input[type="checkbox"] { grid-area: check; }
+  .todo-item:not(.editing) > .badge { grid-area: badge; justify-self: start; }
+  .todo-item:not(.editing) > .todo-text { grid-area: text; }
+  .todo-item:not(.editing) > [data-action="edit"].icon-btn { grid-area: edit; }
+  .todo-item:not(.editing) > [data-action="delete"] { grid-area: del; }
+
+  .todo-item.editing .edit-input,
+  .todo-item.editing select { min-height: 40px; }
+}

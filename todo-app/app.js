@@ -197,6 +197,7 @@ function createTodoItem(todo) {
   li.appendChild(checkbox);
 
   if (todo.id === editingId) {
+    li.classList.add("editing"); // 좁은 화면에서 편집 행을 두 줄로 배치하기 위한 클래스
     const select = document.createElement("select");
     select.className = "edit-select";
     select.setAttribute("aria-label", "카테고리 수정");
