@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>할 일 관리</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✅</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="card">
+    <header class="top">
+      <h1>✅ 할 일 관리</h1>
+      <time class="date" id="dateLabel"></time>
+    </header>
+
+    <section class="stats" aria-label="진행률">
+      <div class="stats-head">
+        <strong id="statsText">완료 0 / 0 (0%)</strong>
+        <span class="party" id="party" hidden>🎉 모두 완료!</span>
+      </div>
+      <div class="track" id="track" role="progressbar" aria-label="전체 진행률"
+           aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="track-fill" id="trackFill"></div>
+      </div>
+      <ul class="cat-stats" id="catStats"></ul>
+    </section>
+
+    <form class="composer" id="composer" autocomplete="off">
+      <input type="text" id="newText" maxlength="100" placeholder="할 일을 입력하세요" aria-label="새 할 일">
+      <select id="newCategory" aria-label="카테고리 선택"></select>
+      <button type="submit" class="btn">추가</button>
+    </form>
+
+    <nav class="tabs" id="tabs" aria-label="카테고리 필터"></nav>
+
+    <ul class="list" id="list"></ul>
+    <p class="empty" id="empty" hidden></p>
+
+    <footer class="bottom">
+      <button type="button" class="link-btn" id="clearDone">완료 항목 지우기</button>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

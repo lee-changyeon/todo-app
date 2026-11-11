@@ -4,12 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-A personal todo web app (Korean UI) built with plain HTML5 / CSS3 / vanilla JavaScript (ES2020). There is no npm, no bundler, no framework, no module system, and no automated test suite. There are two independent versions of the app, each made of `index.html`, `style.css`, and `app.js`:
+A personal todo web app (Korean UI) built with plain HTML5 / CSS3 / vanilla JavaScript (ES2020). There is no npm, no bundler, no framework, no module system, and no automated test suite. There are three independent versions of the app, each made of `index.html`, `style.css`, and `app.js`:
 
 - `todo-app/` — the original app. Its PRD/TRD/TASKS docs are at the repo root. Deployed at the site root.
 - `todo-app2/` — a rewrite planned from scratch, with its own `PRD.md`, `TRD.md`, and `TASKS.md` inside the folder. Deployed under `/todo-app2/`. Because both apps share one origin, they share `localStorage`; it uses the `localStorage` keys `todos2` / `todos2Filter`, so its data never mixes with `todo-app/` (`todos` / `todoFilter`).
+- `todo-app3/` — built from `todo-app2/PRD.md` by following the 5-step prompts in `todo-app2/PROMPTS.md`. It has no docs of its own and is not deployed. It uses the keys `todos3` / `todos3Filter`; its DOM ids and class names differ from `todo-app2/` (e.g. `#list`, `.item`, `.is-done`).
 
-Both versions share the architecture described below. When working on one, update that version's own docs.
+All versions share the architecture described below. When working on one, update that version's own docs.
 
 ## Commands
 
