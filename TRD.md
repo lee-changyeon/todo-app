@@ -210,12 +210,26 @@ const CATEGORIES  = { work: "업무", personal: "개인", study: "공부" };
 |---|---|---|
 | `#addForm` | `submit` | 기본 동작 막기 → trim → 빈 값이면 `.shake` 애니메이션, 아니면 `addTodo` 후 입력창 비우고 포커스 유지 |
 | `#addInput` | `animationend` | `.shake` 클래스 제거 |
-| `#todoList` | `click` | 6.1 표 참고 |
+| `document` | `mousedown` | 편집 중에 체크박스 · 버튼이나 필터 탭을 누르면 `preventDefault()`로 포커스 이동을 막음 (6.3) |
+| `#todoList` | `click` | 편집 중이면 `finishEdit(true)`로 먼저 저장 → 6.1 표 참고 |
 | `#todoList` | `dblclick` | 텍스트 더블클릭 시 편집 시작 |
 | `#todoList` | `keydown` | 편집 중 `Enter` → 저장, `Esc` → 취소 |
-| `#todoList` | `focusout` | 포커스가 편집 중인 항목 밖으로 나가면 저장 (`relatedTarget`으로 판단, 같은 항목 안의 select ↔ input 이동은 무시) |
-| `.filters` | `click` | `data-filter` 값으로 `setFilter` |
+| `#todoList` | `focusout` | **편집 입력창 · 카테고리 선택**에서 포커스가 항목 밖으로 나가면 저장 (`relatedTarget`으로 판단, 같은 항목 안의 select ↔ input 이동은 무시). 다른 요소의 `focusout`은 무시 (6.3) |
+| `.filters` | `click` | 편집 중이면 `finishEdit(true)`로 먼저 저장 → `data-filter` 값으로 `setFilter` |
 | `#clearDone` | `click` | 완료 개수 표시한 `confirm()` 후 `clearCompleted` |
+
+### 6.3 편집 관련 버그 수정 (2026-11-11)
+1. **✏️ 버튼으로 편집을 시작하면 오류가 나던 문제**
+   ✏️ 버튼에 포커스가 있는 상태에서 목록을 다시 그리면 사라지는 버튼에서 `focusout`이 발생한다 (현재 Edge · Chrome 동작).
+   이전 `focusout` 처리는 어떤 요소에서 나간 포커스든 편집 종료로 보고 `finishEdit`을 불러, 편집기가 그려지기 전에
+   `.edit-input`을 읽다가 `Cannot read properties of null` 오류가 났다. 그 결과 고친 내용이 저장되지 않았다
+   (텍스트 더블클릭으로 시작한 편집은 정상).
+   → `focusout`은 `.edit-input` · `.edit-select`에서 나간 경우만 처리하고, `finishEdit`은 편집기 요소가 없으면 값을 읽지 않도록 했다.
+2. **편집 중 다른 컨트롤 클릭이 무시되던 문제**
+   편집 중에 다른 항목의 체크박스 · ✏️ · 🗑를 누르면 `mousedown` 때 `focusout` → 저장 → 다시 그리기가 먼저 일어나
+   누른 요소가 사라지고 클릭이 무시됐다.
+   → `mousedown`에서 `button[data-action]` · `input[data-action]` · `[data-filter]`이면 포커스 이동을 막고,
+   `click` 처리에서 편집을 먼저 저장한 뒤 원래 동작을 실행한다. 편집 중인 항목 자신의 체크박스를 눌러도 고친 내용이 저장된 뒤 완료 처리된다.
 
 ---
 
@@ -317,6 +331,9 @@ python -m http.server 5500 --directory todo-app
 | T-11 | `localStorage.todos`에 깨진 JSON 저장 후 새로고침 | 오류 없이 빈 목록 | 통과 |
 | T-12 | 좁은 화면 (약 450px) | 레이아웃 깨짐 없음 | 통과 |
 | T-13 | 콘솔 오류 | 없음 | 통과 |
+
+> **2026-11-11 재검증:** Playwright로 Edge(헤드리스)를 자동 조작해 다시 확인한 결과, 수정 전 코드는 **T-03(✏️ 클릭 → 수정 → Enter)이 실패**했다 (6.3의 1번 버그).
+> 6.3 수정 후 T-01 ~ T-13 통과, 편집 중 클릭 시나리오 9개 통과.
 
 ### 10.3 수동 테스트 팁
 브라우저 개발자 도구(F12) → **Application** 탭 → **Local Storage**에서 `todos` 값을 직접 보고 수정·삭제할 수 있습니다.

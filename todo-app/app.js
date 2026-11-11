@@ -262,9 +262,11 @@ function finishEdit(saveChanges) {
   const li = todoList.querySelector(`[data-id="${id}"]`);
   editingId = null;
 
-  if (saveChanges && li) {
-    const text = li.querySelector(".edit-input").value.trim();
-    const category = li.querySelector(".edit-select").value;
+  const input = li?.querySelector(".edit-input");
+  const select = li?.querySelector(".edit-select");
+  if (saveChanges && input && select) {
+    const text = input.value.trim().slice(0, MAX_LENGTH);
+    const category = select.value;
     if (text) {
       updateTodo(id, { text, category });
       return;
@@ -292,11 +294,21 @@ addForm.addEventListener("submit", (e) => {
 
 addInput.addEventListener("animationend", () => addInput.classList.remove("shake"));
 
+// 편집 중에 다른 컨트롤(체크박스 · 버튼, 필터 탭)을 누르면 mousedown 때 포커스가 빠져나가며
+// focusout → 저장 → 다시 그리기가 먼저 일어나 누른 요소가 사라지고 click이 무시된다.
+// 그래서 포커스 이동을 막고, 저장은 click 처리에서 finishEdit(true)로 먼저 한 뒤 원래 동작을 실행한다.
+document.addEventListener("mousedown", (e) => {
+  if (!editingId) return;
+  if (e.target.closest("button[data-action], input[data-action], [data-filter]")) e.preventDefault();
+});
+
 todoList.addEventListener("click", (e) => {
   const action = e.target.dataset.action;
   const li = e.target.closest(".todo-item");
   if (!action || !li) return;
   const id = li.dataset.id;
+  // 편집 중이면 먼저 저장한다 (id · action은 다시 그리기 전에 읽어 둠)
+  if (action !== "edit" || e.target.tagName === "BUTTON") finishEdit(true);
 
   if (action === "toggle") toggleTodo(id);
   if (action === "edit" && e.target.tagName === "BUTTON") startEdit(id);
@@ -321,16 +333,21 @@ todoList.addEventListener("keydown", (e) => {
   }
 });
 
-// 편집 중 항목 밖으로 포커스가 나가면 저장
+// 편집 입력창 · 카테고리에서 포커스가 항목 밖으로 나가면 저장.
+// 편집 컨트롤에서 나간 경우만 본다 — ✏️ 버튼처럼 다시 그리기로 사라지는 요소의 focusout까지
+// 편집 종료로 처리하면, 편집기가 그려지기 전에 finishEdit이 불려 오류가 났다.
 todoList.addEventListener("focusout", (e) => {
   if (!editingId) return;
+  if (!e.target.matches(".edit-input, .edit-select")) return;
   const li = e.target.closest(".todo-item");
   if (li && !li.contains(e.relatedTarget)) finishEdit(true);
 });
 
 filters.addEventListener("click", (e) => {
   const filter = e.target.dataset.filter;
-  if (filter) setFilter(filter);
+  if (!filter) return;
+  finishEdit(true); // 편집 중이었다면 저장
+  setFilter(filter);
 });
 
 clearDoneBtn.addEventListener("click", () => {
