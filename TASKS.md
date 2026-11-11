@@ -23,10 +23,10 @@
 | M5 | 필터 · 진행률 | P0 | ✅ 완료 |
 | M6 | 사용성 개선 | P1 | ✅ 완료 |
 | M7 | 테스트 · 문서화 | P0 | ✅ 완료 |
-| M8 | 배포 · 버전 관리 | P1 | ⬜ 남음 |
+| M8 | 배포 · 버전 관리 | P1 | ✅ 완료 |
 | M9 | 추가 기능 | P2 | ⬜ 남음 |
 
-**P0 / P1 기능은 모두 완료**되었고, 커밋과 P2 기능이 남아 있습니다.
+**P0 / P1 기능과 배포까지 모두 완료**되었고, 실사용 테스트(T7-9, T7-10)와 P2 기능이 남아 있습니다.
 
 ---
 
@@ -121,7 +121,7 @@
 - [x] **T7-5** 좁은 화면 레이아웃 확인, 콘솔 오류 없음 확인
 - [x] **T7-6** [PRD.md](PRD.md) 작성
 - [x] **T7-7** [TRD.md](TRD.md) 작성 (테스트 결과 T-01~T-13 포함)
-- [x] **T7-8** TASKS.md 작성 (이 문서)
+- [x] **T7-8** TASKS.md 작성 (이 문서), README.md 작성
 - [ ] **T7-9** 실제 브라우저 여러 곳(Chrome, Edge, 모바일)에서 직접 사용해 보기
 - [ ] **T7-10** 할 일 20개 이상 넣고 하루 실사용해 보기
 
@@ -129,10 +129,10 @@
 
 ## M8. 배포 · 버전 관리
 
-- [ ] **T8-1** 변경 사항 git 커밋 (`PRD.md`, `TRD.md`, `TASKS.md`, `todo-app/`, `.claude/launch.json`)
-- [ ] **T8-2** GitHub 원격 저장소에 push
-- [ ] **T8-3** (선택) GitHub Pages로 배포해 휴대폰에서도 접속
-- [ ] **T8-4** (선택) `README.md` 작성 — 실행 방법, 화면 캡처
+- [x] **T8-1** 변경 사항 git 커밋 (`PRD.md`, `TRD.md`, `TASKS.md`, `todo-app/`, `.claude/launch.json`)
+- [x] **T8-2** GitHub 원격 저장소에 push ([lee-changyeon/todo-app](https://github.com/lee-changyeon/todo-app))
+- [x] **T8-3** GitHub Pages로 배포 (https://lee-changyeon.github.io/todo-app/, GitHub Actions 자동 배포)
+- [x] **T8-4** `README.md` 작성 — 기능, 사용법, 실행 방법, 구조
 
 ---
 
