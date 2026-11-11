@@ -232,7 +232,7 @@ function createTodoItem(todo) {
   actions.className = "todo-actions";
   actions.append(
     createIconButton("✏️", "edit", `${todo.text} 수정`),
-    createIconButton("🗑", "delete", `${todo.text} 삭제`)
+    createIconButton("🗑️", "delete", `${todo.text} 삭제`)
   );
 
   li.append(badge, text, actions);
