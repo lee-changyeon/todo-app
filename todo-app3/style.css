@@ -271,7 +271,7 @@ input[type="text"], select { font-size: 1rem; } /* 16px 미만이면 iOS에서 �
     row-gap: 2px;
     align-items: center;
   }
-  .item:not(.is-editing) > .item-check { grid-area: check; }
+  .item:not(.is-editing) > .check-wrap { grid-area: check; }
   .item:not(.is-editing) > .tag { grid-area: tag; justify-self: start; }
   .item:not(.is-editing) > .item-text { grid-area: text; }
   .item:not(.is-editing) > [data-action="edit"] { grid-area: edit; }
@@ -283,3 +283,17 @@ input[type="text"], select { font-size: 1rem; } /* 16px 미만이면 iOS에서 �
   /* 제목과 날짜가 붙어 보이지 않게 두 줄로 */
   .top { flex-direction: column; align-items: flex-start; }
 }
+
+/* 체크박스 누르는 영역 40×40px (보이는 체크박스는 22px 그대로) */
+.check-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  margin: 0 -9px;          /* 넓어진 만큼 바깥 여백을 줄여 기존 배치 유지 */
+  border-radius: 8px;
+  cursor: pointer;
+}
+.check-wrap:hover { background: rgba(0, 0, 0, 0.04); }

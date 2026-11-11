@@ -194,7 +194,7 @@ function createTodoItem(todo) {
   checkbox.checked = todo.completed;
   checkbox.dataset.action = "toggle";
   checkbox.setAttribute("aria-label", `${todo.text} 완료`);
-  li.appendChild(checkbox);
+  li.appendChild(wrapCheckbox(checkbox));
 
   if (todo.id === editingId) {
     li.classList.add("editing"); // 좁은 화면에서 편집 행을 두 줄로 배치하기 위한 클래스
@@ -238,6 +238,14 @@ function createTodoItem(todo) {
 
   li.append(badge, text, actions);
   return li;
+}
+
+// 체크박스(22px)를 40×40px 라벨로 감싸 누르는 영역을 넓힌다. 라벨 클릭은 체크박스 클릭으로 전달된다.
+function wrapCheckbox(checkbox) {
+  const wrap = document.createElement("label");
+  wrap.className = "check-wrap";
+  wrap.append(checkbox);
+  return wrap;
 }
 
 function createIconButton(icon, action, label) {
@@ -300,19 +308,27 @@ addInput.addEventListener("animationend", () => addInput.classList.remove("shake
 // 그래서 포커스 이동을 막고, 저장은 click 처리에서 finishEdit(true)로 먼저 한 뒤 원래 동작을 실행한다.
 document.addEventListener("mousedown", (e) => {
   if (!editingId) return;
-  if (e.target.closest("button[data-action], input[data-action], [data-filter]")) e.preventDefault();
+  if (e.target.closest("button[data-action], input[data-action], .check-wrap, [data-filter]")) e.preventDefault();
 });
 
 todoList.addEventListener("click", (e) => {
-  const action = e.target.dataset.action;
-  const li = e.target.closest(".todo-item");
+  let el = e.target;
+  // 체크박스 둘레(.check-wrap 라벨 여백)를 누른 경우: 브라우저의 라벨 동작은 "체크박스로 포커스 이동 → 클릭"인데,
+  // 편집 중이면 포커스 이동 때 저장 · 다시 그리기가 일어나 클릭이 사라진다. 기본 동작을 막고 직접 체크 처리한다.
+  const wrap = el.closest(".check-wrap");
+  if (!el.dataset.action && wrap) {
+    e.preventDefault();
+    el = wrap.querySelector("input");
+  }
+  const action = el.dataset.action;
+  const li = el.closest(".todo-item");
   if (!action || !li) return;
   const id = li.dataset.id;
   // 편집 중이면 먼저 저장한다 (id · action은 다시 그리기 전에 읽어 둠)
-  if (action !== "edit" || e.target.tagName === "BUTTON") finishEdit(true);
+  if (action !== "edit" || el.tagName === "BUTTON") finishEdit(true);
 
   if (action === "toggle") toggleTodo(id);
-  if (action === "edit" && e.target.tagName === "BUTTON") startEdit(id);
+  if (action === "edit" && el.tagName === "BUTTON") startEdit(id);
   if (action === "delete") {
     const todo = todos.find((t) => t.id === id);
     if (todo && confirm(`"${todo.text}" 을(를) 삭제할까요?`)) deleteTodo(id);

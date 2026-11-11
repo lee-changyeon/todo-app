@@ -304,8 +304,13 @@ function buildItem(todo) {
   text.textContent = todo.text;
   text.title = "더블클릭하면 수정할 수 있어요";
 
+  // 체크박스(22px)를 40×40px 라벨로 감싸 누르는 영역을 넓힌다. 라벨 클릭은 체크박스 클릭으로 전달된다.
+  const checkWrap = document.createElement("label");
+  checkWrap.className = "check-wrap";
+  checkWrap.append(check);
+
   li.append(
-    check,
+    checkWrap,
     tag,
     text,
     buildIconButton("✏️", "edit", "수정"),
@@ -380,13 +385,20 @@ newCategory.addEventListener("change", () => {
 // 저장은 click 처리에서 endEdit(true)로 먼저 한 뒤 원래 동작을 실행한다.
 document.addEventListener("mousedown", (event) => {
   if (!state.editingId) return;
-  const control = event.target.closest("button[data-action], input[data-action], [data-filter]");
+  const control = event.target.closest("button[data-action], input[data-action], .check-wrap, [data-filter]");
   if (control && !control.closest(".is-editing")) event.preventDefault();
 });
 
 // 항목은 매번 새로 그려지므로 목록 하나에 위임한다
 list.addEventListener("click", (event) => {
-  const target = event.target.closest("[data-action]");
+  let target = event.target.closest("[data-action]");
+  // 체크박스 둘레(.check-wrap 라벨 여백)를 누른 경우: 브라우저의 라벨 동작은 "체크박스로 포커스 이동 → 클릭"인데,
+  // 편집 중이면 포커스 이동 때 저장 · 다시 그리기가 일어나 클릭이 사라진다. 기본 동작을 막고 직접 체크 처리한다.
+  const wrap = event.target.closest(".check-wrap");
+  if (!target && wrap) {
+    event.preventDefault();
+    target = wrap.querySelector("[data-action]");
+  }
   if (!target || !list.contains(target) || target.closest(".is-editing")) return;
   const id = target.closest(".item")?.dataset.id;
   const action = target.dataset.action;
