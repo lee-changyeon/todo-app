@@ -8,15 +8,15 @@ A personal todo web app (Korean UI) built with plain HTML5 / CSS3 / vanilla Java
 
 - `todo-app/` — the original app. Its PRD/TRD/TASKS docs are at the repo root. Deployed at the site root.
 - `todo-app2/` — a rewrite planned from scratch, with its own `PRD.md`, `TRD.md`, and `TASKS.md` inside the folder. Deployed under `/todo-app2/`. Because both apps share one origin, they share `localStorage`; it uses the `localStorage` keys `todos2` / `todos2Filter`, so its data never mixes with `todo-app/` (`todos` / `todoFilter`).
-- `todo-app3/` — built from `todo-app2/PRD.md` by following the 5-step prompts in `todo-app2/PROMPTS.md`. It has no docs of its own and is not deployed. It uses the keys `todos3` / `todos3Filter`; its DOM ids and class names differ from `todo-app2/` (e.g. `#list`, `.item`, `.is-done`).
+- `todo-app3/` — built from `todo-app2/PRD.md` by following the 5-step prompts in `todo-app2/PROMPTS.md`. It has no docs of its own. Deployed under `/todo-app3/`. It uses the keys `todos3` / `todos3Filter`; its DOM ids and class names differ from `todo-app2/` (e.g. `#list`, `.item`, `.is-done`).
 
 All versions share the architecture described below. When working on one, update that version's own docs.
 
 ## Commands
 
-- **Run locally:** `python -m http.server 5500 --directory todo-app` (or `--directory todo-app2`), then open http://localhost:5500. The same command is configured in `.claude/launch.json`. Opening `todo-app/index.html` directly in a browser also works, but `file://` and `localhost` keep separate `localStorage` data.
-- **Deploy:** pushing to `main` triggers `.github/workflows/pages.yml`, which assembles a `_site/` folder (`todo-app/` at the root, plus only `index.html` / `style.css` / `app.js` from `todo-app2/` under `todo-app2/`) and publishes it to GitHub Pages: https://lee-changyeon.github.io/todo-app/ and https://lee-changyeon.github.io/todo-app/todo-app2/. A new file added to `todo-app2/` will not be deployed until it is added to the `cp` line in the workflow.
-- **Test:** testing is manual, in the browser, against the scenarios in `TRD.md` §10.2 (`todo-app/`) or `todo-app2/TRD.md` §8.2. Inspect or edit stored data under DevTools → Application → Local Storage (keys `todos` / `todoFilter`, or `todos2` / `todos2Filter`).
+- **Run locally:** `python -m http.server 5500 --directory todo-app` (or `todo-app2` / `todo-app3`), then open http://localhost:5500. The same command is configured in `.claude/launch.json`. Opening `todo-app/index.html` directly in a browser also works, but `file://` and `localhost` keep separate `localStorage` data.
+- **Deploy:** pushing to `main` triggers `.github/workflows/pages.yml`, which assembles a `_site/` folder (`todo-app/` at the root, plus only `index.html` / `style.css` / `app.js` from `todo-app2/` and `todo-app3/` under same-named subfolders) and publishes it to GitHub Pages: https://lee-changyeon.github.io/todo-app/, `.../todo-app/todo-app2/`, and `.../todo-app/todo-app3/`. Any other file added to `todo-app2/` or `todo-app3/` is not deployed until it is added to the `cp` line in the workflow.
+- **Test:** testing is manual, in the browser, against the scenarios in `TRD.md` §10.2 (`todo-app/`) or `todo-app2/TRD.md` §8.2. Inspect or edit stored data under DevTools → Application → Local Storage (keys `todos` / `todoFilter`, `todos2` / `todos2Filter`, or `todos3` / `todos3Filter`).
 
 ## Architecture (`app.js`, both versions)
 
