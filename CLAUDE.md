@@ -6,15 +6,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A personal todo web app (Korean UI) built with plain HTML5 / CSS3 / vanilla JavaScript (ES2020). There is no npm, no bundler, no framework, no module system, and no automated test suite. There are two independent versions of the app, each made of `index.html`, `style.css`, and `app.js`:
 
-- `todo-app/` — the original app. Its PRD/TRD/TASKS docs are at the repo root. This is the only folder deployed to GitHub Pages.
-- `todo-app2/` — a rewrite planned from scratch, with its own `PRD.md`, `TRD.md`, and `TASKS.md` inside the folder. It is not deployed. It uses the `localStorage` keys `todos2` / `todos2Filter`, so its data never mixes with `todo-app/` (`todos` / `todoFilter`).
+- `todo-app/` — the original app. Its PRD/TRD/TASKS docs are at the repo root. Deployed at the site root.
+- `todo-app2/` — a rewrite planned from scratch, with its own `PRD.md`, `TRD.md`, and `TASKS.md` inside the folder. Deployed under `/todo-app2/`. Because both apps share one origin, they share `localStorage`; it uses the `localStorage` keys `todos2` / `todos2Filter`, so its data never mixes with `todo-app/` (`todos` / `todoFilter`).
 
 Both versions share the architecture described below. When working on one, update that version's own docs.
 
 ## Commands
 
 - **Run locally:** `python -m http.server 5500 --directory todo-app` (or `--directory todo-app2`), then open http://localhost:5500. The same command is configured in `.claude/launch.json`. Opening `todo-app/index.html` directly in a browser also works, but `file://` and `localhost` keep separate `localStorage` data.
-- **Deploy:** pushing to `main` triggers `.github/workflows/pages.yml`, which uploads **only the `todo-app/` folder** to GitHub Pages (https://lee-changyeon.github.io/todo-app/).
+- **Deploy:** pushing to `main` triggers `.github/workflows/pages.yml`, which assembles a `_site/` folder (`todo-app/` at the root, plus only `index.html` / `style.css` / `app.js` from `todo-app2/` under `todo-app2/`) and publishes it to GitHub Pages: https://lee-changyeon.github.io/todo-app/ and https://lee-changyeon.github.io/todo-app/todo-app2/. A new file added to `todo-app2/` will not be deployed until it is added to the `cp` line in the workflow.
 - **Test:** testing is manual, in the browser, against the scenarios in `TRD.md` §10.2 (`todo-app/`) or `todo-app2/TRD.md` §8.2. Inspect or edit stored data under DevTools → Application → Local Storage (keys `todos` / `todoFilter`, or `todos2` / `todos2Filter`).
 
 ## Architecture (`app.js`, both versions)
