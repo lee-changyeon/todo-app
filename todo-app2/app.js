@@ -309,9 +309,21 @@ addForm.addEventListener("submit", (e) => {
 
 addInput.addEventListener("animationend", () => addInput.classList.remove("shake"));
 
+// 편집 중에 다시 그려지는 컨트롤(다른 항목의 체크박스 · 버튼, 필터 탭)을 누르면
+// mousedown 때 포커스가 빠져나가며 focusout → 저장 → 다시 그리기가 먼저 일어나
+// 누른 요소가 사라지고 click이 무시된다. 그래서 포커스 이동을 막고,
+// 저장은 아래 click 처리에서 finishEdit(true)로 먼저 한 뒤 원래 동작을 실행한다.
+document.addEventListener("mousedown", (e) => {
+  if (!editingId) return;
+  const control = e.target.closest("button[data-action], input[data-action], [data-filter]");
+  if (control && !control.closest(".editing")) e.preventDefault();
+});
+
 filtersNav.addEventListener("click", (e) => {
   const btn = e.target.closest("[data-filter]");
-  if (btn) setFilter(btn.dataset.filter);
+  if (!btn) return;
+  finishEdit(true); // 편집 중이었다면 저장 (setFilter는 편집을 저장 없이 해제하므로)
+  setFilter(btn.dataset.filter);
 });
 
 // 목록은 매번 다시 그려지므로 부모 하나에만 리스너를 둔다 (이벤트 위임)
@@ -320,6 +332,9 @@ todoList.addEventListener("click", (e) => {
   if (!target) return;
   const id = getItemId(target);
   const action = target.dataset.action;
+  if (target.closest(".editing")) return;
+  // 다른 항목을 편집 중이면 먼저 저장한다 (id · action은 다시 그리기 전에 읽어 둠)
+  finishEdit(true);
 
   if (action === "toggle") {
     toggleTodo(id);

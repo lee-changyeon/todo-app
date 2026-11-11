@@ -317,15 +317,28 @@ composer.addEventListener("submit", (event) => {
 
 newText.addEventListener("animationend", () => newText.classList.remove("is-invalid"));
 
+// 편집 중에 다시 그려지는 컨트롤(다른 항목의 체크박스 · 버튼, 필터 탭)을 누르면
+// mousedown 때 포커스가 빠져나가며 focusout → 저장 → 다시 그리기가 먼저 일어나
+// 누른 요소가 사라지고 click이 무시된다. 그래서 포커스 이동을 막고,
+// 저장은 click 처리에서 endEdit(true)로 먼저 한 뒤 원래 동작을 실행한다.
+document.addEventListener("mousedown", (event) => {
+  if (!state.editingId) return;
+  const control = event.target.closest("button[data-action], input[data-action], [data-filter]");
+  if (control && !control.closest(".is-editing")) event.preventDefault();
+});
+
 // 항목은 매번 새로 그려지므로 목록 하나에 위임한다
 list.addEventListener("click", (event) => {
   const target = event.target.closest("[data-action]");
-  if (!target || !list.contains(target)) return;
+  if (!target || !list.contains(target) || target.closest(".is-editing")) return;
   const id = target.closest(".item")?.dataset.id;
+  const action = target.dataset.action;
+  // 다른 항목을 편집 중이면 먼저 저장한다 (id · action은 다시 그리기 전에 읽어 둠)
+  endEdit(true);
   const todo = findTodo(id);
   if (!todo) return;
 
-  switch (target.dataset.action) {
+  switch (action) {
     case "toggle":
       toggleTodo(id);
       break;
@@ -364,7 +377,9 @@ list.addEventListener("focusout", (event) => {
 
 tabs.addEventListener("click", (event) => {
   const tab = event.target.closest("[data-filter]");
-  if (tab) setFilter(tab.dataset.filter);
+  if (!tab) return;
+  endEdit(true); // 편집 중이었다면 저장 (setFilter는 편집을 저장 없이 해제하므로)
+  setFilter(tab.dataset.filter);
 });
 
 clearDone.addEventListener("click", () => {

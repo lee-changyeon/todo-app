@@ -184,12 +184,23 @@ const FILTERS     = { all: "전체", ...CATEGORIES };
 |---|---|---|
 | `#addForm` | `submit` | 기본 동작 막기 → trim → 빈 값이면 `.shake`, 아니면 `addTodo` 후 입력창 비우고 포커스 유지 |
 | `#addInput` | `animationend` | `.shake` 제거 |
-| `#filters` | `click` | `data-filter` 값으로 `setFilter` |
-| `#todoList` | `click` | 5.1 표 |
+| `document` | `mousedown` | 편집 중에 다른 항목의 체크박스 · 버튼이나 필터 탭을 누르면 `preventDefault()`로 포커스 이동을 막는다 (5.3) |
+| `#filters` | `click` | 편집 중이면 `finishEdit(true)`로 먼저 저장 → `data-filter` 값으로 `setFilter` |
+| `#todoList` | `click` | 편집 중이면 `finishEdit(true)`로 먼저 저장 → 5.1 표 |
 | `#todoList` | `dblclick` | `.todo-text` 더블클릭 시 편집 시작 |
 | `#todoList` | `keydown` | 편집 중 `Enter` → 저장, `Esc` → 취소 |
 | `#todoList` | `focusout` | 포커스가 편집 항목 밖으로 나가면 저장. `relatedTarget`이 같은 항목 안(입력창 ↔ 카테고리)이면 무시 |
 | `#clearDone` | `click` | 완료 개수를 보여 주는 `confirm()` 후 `clearCompleted` |
+
+### 5.3 편집 중 다른 컨트롤 클릭
+목록과 필터 탭은 매번 다시 그려진다. 편집 중에 다른 항목의 버튼을 누르면 `mousedown` 순간 포커스가 빠져나가
+`focusout` → 저장 → 다시 그리기가 먼저 일어나고, 손을 떼는 `click` 때는 누른 요소가 이미 사라져 클릭이 무시됐다.
+
+이를 막기 위해:
+1. `mousedown`에서 대상이 다시 그려지는 컨트롤(`button[data-action]`, `input[data-action]`, `[data-filter]`)이고 편집 항목 밖이면 `preventDefault()`로 포커스 이동을 막는다. → `focusout`이 일어나지 않는다.
+2. `click` 처리에서 `id` · `action`을 먼저 읽어 둔 뒤 `finishEdit(true)`로 편집을 저장하고, 그다음 원래 동작을 실행한다.
+
+빈 곳 · 추가 입력창처럼 다시 그려지지 않는 곳을 누르면 이전처럼 `focusout`으로 저장된다.
 
 ---
 
@@ -275,6 +286,10 @@ const FILTERS     = { all: "전체", ...CATEGORIES };
 ## 9. 알려진 제약 및 향후 과제
 | 항목 | 내용 |
 |---|---|
-| 편집 중 다른 항목 클릭 | 편집 저장으로 목록이 다시 그려지면서 그 클릭이 무시될 수 있음 (한 번 더 누르면 동작) |
 | 데이터 범위 | 사용하는 브라우저에만 저장, 다른 기기와 공유 안 됨 |
 | 향후 과제 | 다크 모드, 삭제 실행 취소, JSON 백업/복원, 드래그 정렬, 마감일 |
+
+### 9.1 수정 이력
+| 날짜 | 내용 |
+|---|---|
+| 2026-11-11 | 편집 중 다른 항목의 체크박스 · ✏️ · 🗑나 필터 탭을 누르면 편집만 저장되고 그 클릭이 무시되던 문제 수정 (5.3). 편집 중 클릭 시나리오 8개와 기존 테스트 17개 통과 |
