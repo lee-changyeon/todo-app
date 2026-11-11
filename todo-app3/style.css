@@ -127,6 +127,13 @@ input[type="text"]:focus, select:focus {
 .link-btn:hover:not(:disabled) { color: var(--warn); }
 .link-btn:disabled { opacity: 0.4; cursor: default; }
 
+/* 키워드 자동 분류 안내 */
+.auto-hint {
+  margin: 6px 2px 0;
+  color: var(--accent);
+  font-size: 0.85rem;
+}
+
 .is-invalid {
   border-color: var(--warn) !important;
   animation: wobble 0.35s;

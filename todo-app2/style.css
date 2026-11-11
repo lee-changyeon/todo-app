@@ -128,6 +128,13 @@ input[type="text"]:focus, select:focus {
 .btn-text:hover:not(:disabled) { color: var(--danger); }
 .btn-text:disabled { opacity: 0.4; cursor: default; }
 
+/* 키워드 자동 분류 안내 */
+.auto-hint {
+  margin: 6px 2px 0;
+  color: var(--primary);
+  font-size: 0.85rem;
+}
+
 .shake { animation: shake 0.35s; border-color: var(--danger) !important; }
 @keyframes shake {
   0%, 100% { transform: translateX(0); }

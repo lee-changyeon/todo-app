@@ -5,6 +5,23 @@ const MAX_LENGTH = 100;
 const CATEGORIES = { work: "업무", personal: "개인", study: "공부" };
 const FILTERS = { all: "전체", ...CATEGORIES };
 
+// 키워드 자동 분류 (PRD F9). 소문자로 적고, 할 일 내용에 "포함"되면 일치로 본다.
+// 한 글자 · 너무 흔한 말(예: "책", "집", "문제")은 다른 단어에 섞여 오분류되기 쉬워 넣지 않는다.
+const CATEGORY_KEYWORDS = {
+  work: [
+    "회의", "미팅", "보고서", "메일", "결재", "기획", "발표", "프로젝트", "고객", "거래처",
+    "견적", "계약", "출근", "출장", "야근", "업무", "회사", "팀장", "부장", "ppt", "엑셀", "제안서",
+  ],
+  personal: [
+    "장보기", "장 보기", "마트", "운동", "헬스", "산책", "병원", "치과", "약속", "청소", "빨래",
+    "설거지", "요리", "은행", "택배", "생일", "가족", "친구", "쇼핑", "미용실", "영화", "여행", "이사",
+  ],
+  study: [
+    "공부", "과제", "숙제", "시험", "강의", "인강", "수업", "복습", "예습", "독서", "도서관", "논문",
+    "레포트", "리포트", "알고리즘", "코딩", "영어", "단어", "자격증", "스터디", "학원", "문제집", "토익",
+  ],
+};
+
 // ===== 상태 =====
 let todos = loadTodos();
 let currentFilter = loadFilter();
@@ -24,6 +41,7 @@ const progressBar = $("#progressBar");
 const progressFill = $("#progressFill");
 const categoryProgress = $("#categoryProgress");
 const celebrate = $("#celebrate");
+const autoHint = $("#autoHint");
 
 // ===== 저장 / 불러오기 =====
 function loadTodos() {
@@ -126,6 +144,25 @@ function getVisibleTodos() {
   return [...list].sort(
     (a, b) => a.completed - b.completed || b.createdAt - a.createdAt
   );
+}
+
+// 일치한 키워드가 가장 많은 카테고리 키를 돌려준다. 일치가 없거나 1등이 동점이면 null.
+function guessCategory(text) {
+  const lower = text.toLowerCase();
+  let best = null;
+  let bestScore = 0;
+  let tied = false;
+  for (const [category, words] of Object.entries(CATEGORY_KEYWORDS)) {
+    const score = words.filter((word) => lower.includes(word)).length;
+    if (score > bestScore) {
+      best = category;
+      bestScore = score;
+      tied = false;
+    } else if (score > 0 && score === bestScore) {
+      tied = true;
+    }
+  }
+  return best && !tied ? best : null;
 }
 
 // ===== 렌더링 =====
@@ -304,10 +341,52 @@ addForm.addEventListener("submit", (e) => {
   }
   addTodo(text.slice(0, MAX_LENGTH), addCategory.value);
   addInput.value = "";
+  resetAutoCategory();
   addInput.focus();
 });
 
 addInput.addEventListener("animationend", () => addInput.classList.remove("shake"));
+
+// ===== 키워드 자동 분류 (PRD F9) =====
+// baseCategory: 사용자가 직접 골랐거나 마지막으로 쓴 카테고리. 키워드가 없으면 이 값으로 둔다.
+// categoryLocked: 사용자가 직접 고르면 true → 이번 할 일을 추가할 때까지 자동으로 바꾸지 않는다.
+//   (입력창을 지워도 유지 — 고른 카테고리로 다시 쓰는 경우가 많기 때문)
+let baseCategory = "work";
+let categoryLocked = false;
+
+function showAutoHint(category) {
+  autoHint.hidden = !category;
+  autoHint.textContent = category ? `🤖 자동 분류: ${CATEGORIES[category]}` : "";
+}
+
+function applyAutoCategory() {
+  const text = addInput.value.trim();
+  if (categoryLocked) return;
+  if (!text) {
+    addCategory.value = baseCategory;
+    showAutoHint(null);
+    return;
+  }
+  const guess = guessCategory(text);
+  addCategory.value = guess ?? baseCategory;
+  showAutoHint(guess);
+}
+
+function resetAutoCategory() {
+  categoryLocked = false;
+  baseCategory = addCategory.value;
+  showAutoHint(null);
+}
+
+addInput.addEventListener("input", applyAutoCategory);
+
+addCategory.addEventListener("change", () => {
+  // 사용자가 직접 고른 카테고리가 항상 우선
+  // (카테고리를 먼저 고르고 입력하는 경우도 포함 — 이번 할 일을 추가할 때까지 유지)
+  baseCategory = addCategory.value;
+  categoryLocked = true;
+  showAutoHint(null);
+});
 
 // 편집 중에 다시 그려지는 컨트롤(다른 항목의 체크박스 · 버튼, 필터 탭)을 누르면
 // mousedown 때 포커스가 빠져나가며 focusout → 저장 → 다시 그리기가 먼저 일어나
@@ -386,6 +465,7 @@ function init() {
   for (const [key, label] of Object.entries(CATEGORIES)) {
     addCategory.add(new Option(label, key));
   }
+  baseCategory = addCategory.value;
   render();
   addInput.focus();
 }
