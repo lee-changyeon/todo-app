@@ -3,7 +3,15 @@
 하루 10~20개의 할 일을 가볍게 관리하는 개인용 웹 앱입니다.
 설치나 로그인 없이 브라우저에서 바로 쓸 수 있고, 새로고침해도 데이터가 유지됩니다.
 
-**🔗 바로 사용하기: https://lee-changyeon.github.io/todo-app/**
+**🔗 바로 사용하기**
+
+| 앱 | 설명 | 주소 |
+|---|---|---|
+| todo-app | 처음 만든 앱 | https://lee-changyeon.github.io/todo-app/ |
+| todo-app2 | 새로 기획한 PRD로 다시 만든 앱 | https://lee-changyeon.github.io/todo-app/todo-app2/ |
+| todo-app3 | 5단계 프롬프트([PROMPTS.md](todo-app2/PROMPTS.md))로 만든 앱 | https://lee-changyeon.github.io/todo-app/todo-app3/ |
+
+세 앱은 기능이 거의 같고, 저장 공간을 따로 써서 할 일이 서로 섞이지 않습니다.
 
 ---
 
@@ -51,7 +59,7 @@ cd todo-app
 python -m http.server 5500 --directory todo-app
 ```
 
-브라우저에서 http://localhost:5500 에 접속합니다.
+브라우저에서 http://localhost:5500 에 접속합니다. 다른 앱은 `todo-app` 대신 `todo-app2` 또는 `todo-app3`을 넣어 실행합니다.
 
 ## 프로젝트 구조
 
@@ -61,6 +69,10 @@ python -m http.server 5500 --directory todo-app
 │   ├── index.html          # 화면 구조
 │   ├── style.css           # 스타일 · 반응형
 │   └── app.js              # 상태 관리 · 렌더링 · 저장 · 이벤트
+├── todo-app2/              # 두 번째 앱 (index.html · style.css · app.js)
+│   ├── PRD.md · TRD.md · TASKS.md   # todo-app2 기획 · 설계 · 작업 문서
+│   └── PROMPTS.md          # PRD로 앱을 만드는 5단계 프롬프트
+├── todo-app3/              # 5단계 프롬프트로 만든 앱 (index.html · style.css · app.js)
 ├── .github/workflows/
 │   └── pages.yml           # GitHub Pages 자동 배포
 ├── .claude/launch.json     # 로컬 미리보기 서버 설정
@@ -80,7 +92,15 @@ python -m http.server 5500 --directory todo-app
 
 ## 배포
 
-`main` 브랜치에 push하면 GitHub Actions가 `todo-app/` 폴더를 GitHub Pages에 자동으로 배포합니다.
+`main` 브랜치에 push하면 GitHub Actions가 세 앱을 GitHub Pages에 자동으로 배포합니다.
+
+| 폴더 | 배포 경로 |
+|---|---|
+| `todo-app/` | `/todo-app/` (사이트 루트) |
+| `todo-app2/` | `/todo-app/todo-app2/` |
+| `todo-app3/` | `/todo-app/todo-app3/` |
+
+`todo-app2/` · `todo-app3/`는 앱 파일 3개(`index.html`, `style.css`, `app.js`)만 배포되고 문서(`.md`)는 배포되지 않습니다.
 진행 상황은 저장소의 **Actions** 탭에서 확인할 수 있습니다.
 
 ## 알아두기
