@@ -83,7 +83,7 @@
 - [x] `todo-app2/` 파일 커밋 · 푸시
 - [x] 배포 결정: 기존 사이트의 `/todo-app2/` 경로로 함께 배포
 - [x] 워크플로 수정 (`_site/` 폴더를 만들어 두 앱을 함께 업로드, 기획 문서는 제외)
-- [ ] 배포 주소 확인: https://lee-changyeon.github.io/todo-app/todo-app2/
+- [x] 배포 주소 확인: https://lee-changyeon.github.io/todo-app/todo-app2/
 
 ## M9. 다음 버전 기능 (PRD 범위 밖 · 후보)
 - [ ] 편집 중 다른 항목을 클릭하면 클릭이 무시되는 문제 개선
