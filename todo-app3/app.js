@@ -29,9 +29,8 @@ const state = {
   todos: readTodos(),
   filter: readFilter(),
   editingId: null, // 저장하지 않음 — 새로고침하면 편집 해제
-  // 키워드 자동 분류 (저장하지 않음)
+  // 키워드 자동 분류 (저장하지 않음) — 입력할 때마다 항상 자동 분류한다
   baseCategory: "work", // 사용자가 직접 골랐거나 마지막으로 쓴 카테고리 — 키워드가 없으면 이 값
-  categoryLocked: false, // 사용자가 직접 고르면 true → 이번 할 일을 추가할 때까지 자동으로 바꾸지 않음
 };
 
 // ───── DOM ─────
@@ -356,24 +355,22 @@ function showAutoHint(category) {
 }
 
 function applyAutoCategory() {
-  if (state.categoryLocked) return;
   const guess = guessCategory(newText.value.trim());
   newCategory.value = guess ?? state.baseCategory;
   showAutoHint(guess);
 }
 
 function resetAutoCategory() {
-  state.categoryLocked = false;
   state.baseCategory = newCategory.value;
   showAutoHint(null);
 }
 
 newText.addEventListener("input", applyAutoCategory);
 
-// 사용자가 직접 고른 카테고리가 항상 우선 (입력 전에 골라도, 입력 중에 골라도 이번 할 일을 추가할 때까지 유지)
+// 직접 고른 값은 키워드가 없을 때의 기준이 되고, 다음 입력 전까지 그대로 유지된다
+// (입력을 마친 뒤 고르고 Enter → 그 카테고리로 추가)
 newCategory.addEventListener("change", () => {
   state.baseCategory = newCategory.value;
-  state.categoryLocked = true;
   showAutoHint(null);
 });
 

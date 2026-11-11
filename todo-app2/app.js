@@ -348,11 +348,10 @@ addForm.addEventListener("submit", (e) => {
 addInput.addEventListener("animationend", () => addInput.classList.remove("shake"));
 
 // ===== 키워드 자동 분류 (PRD F9) =====
+// 입력할 때마다 항상 자동 분류한다.
 // baseCategory: 사용자가 직접 골랐거나 마지막으로 쓴 카테고리. 키워드가 없으면 이 값으로 둔다.
-// categoryLocked: 사용자가 직접 고르면 true → 이번 할 일을 추가할 때까지 자동으로 바꾸지 않는다.
-//   (입력창을 지워도 유지 — 고른 카테고리로 다시 쓰는 경우가 많기 때문)
+// 직접 고른 값은 다음 입력 전까지 유지된다 (입력을 마친 뒤 고르고 Enter → 그 카테고리로 추가).
 let baseCategory = "work";
-let categoryLocked = false;
 
 function showAutoHint(category) {
   autoHint.hidden = !category;
@@ -360,20 +359,12 @@ function showAutoHint(category) {
 }
 
 function applyAutoCategory() {
-  const text = addInput.value.trim();
-  if (categoryLocked) return;
-  if (!text) {
-    addCategory.value = baseCategory;
-    showAutoHint(null);
-    return;
-  }
-  const guess = guessCategory(text);
+  const guess = guessCategory(addInput.value.trim());
   addCategory.value = guess ?? baseCategory;
   showAutoHint(guess);
 }
 
 function resetAutoCategory() {
-  categoryLocked = false;
   baseCategory = addCategory.value;
   showAutoHint(null);
 }
@@ -381,10 +372,8 @@ function resetAutoCategory() {
 addInput.addEventListener("input", applyAutoCategory);
 
 addCategory.addEventListener("change", () => {
-  // 사용자가 직접 고른 카테고리가 항상 우선
-  // (카테고리를 먼저 고르고 입력하는 경우도 포함 — 이번 할 일을 추가할 때까지 유지)
+  // 직접 고른 값은 키워드가 없을 때의 기준이 되고, 다음 입력 전까지 그대로 유지된다
   baseCategory = addCategory.value;
-  categoryLocked = true;
   showAutoHint(null);
 });
 
