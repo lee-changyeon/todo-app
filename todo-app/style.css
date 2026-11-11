@@ -1,0 +1,222 @@
+:root {
+  --bg: #f3f4f6;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --primary: #4f46e5;
+  --work: #3b82f6;
+  --personal: #22c55e;
+  --study: #f59e0b;
+  --danger: #ef4444;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+  line-height: 1.4;
+}
+
+.app {
+  max-width: 600px;
+  margin: 32px auto;
+  padding: 24px;
+  background: var(--card);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.app-header h1 { margin: 0; font-size: 1.5rem; }
+.today { margin: 0; color: var(--muted); font-size: 0.9rem; }
+
+/* 진행률 */
+.progress {
+  margin: 20px 0;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 12px;
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.bar {
+  height: 10px;
+  background: var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  width: 0;
+  background: var(--primary);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+.progress-cats {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.progress-cats li { font-size: 0.85rem; color: var(--muted); }
+.progress-cats .bar { height: 6px; margin-top: 4px; }
+.progress-cats .work .bar-fill { background: var(--work); }
+.progress-cats .personal .bar-fill { background: var(--personal); }
+.progress-cats .study .bar-fill { background: var(--study); }
+.progress-empty { margin: 0; text-align: center; color: var(--muted); }
+.progress.is-done .progress-label span:last-child::after { content: " 🎉"; }
+
+/* 입력 폼 */
+.add-form { display: flex; gap: 8px; }
+.add-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 1rem;
+}
+.add-form select {
+  padding: 0 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: #fff;
+}
+input:focus, select:focus, button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+.btn-primary {
+  padding: 0 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.btn-primary:hover { opacity: 0.9; }
+
+.shake { animation: shake 0.3s; border-color: var(--danger) !important; }
+@keyframes shake {
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* 필터 탭 */
+.filters { display: flex; gap: 6px; margin: 16px 0 8px; }
+.filters button {
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.filters button:hover { border-color: var(--primary); }
+.filters button[aria-selected="true"] {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+/* 목록 */
+.todo-list { list-style: none; padding: 0; margin: 0; }
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 4px;
+  border-bottom: 1px solid var(--line);
+}
+.todo-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+.badge {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+}
+.badge.work { background: var(--work); }
+.badge.personal { background: var(--personal); }
+.badge.study { background: var(--study); }
+
+.todo-text {
+  flex: 1;
+  min-width: 0;
+  word-break: break-all;
+  cursor: text;
+}
+.todo-item.completed .todo-text { text-decoration: line-through; color: var(--muted); }
+.todo-item.completed .badge { opacity: 0.5; }
+
+.todo-actions { display: flex; gap: 2px; flex-shrink: 0; }
+.icon-btn {
+  border: none;
+  background: none;
+  padding: 4px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.icon-btn:hover { background: #f3f4f6; }
+
+.edit-input {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+  font-size: 1rem;
+}
+.edit-select {
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.empty { text-align: center; color: var(--muted); padding: 32px 0; margin: 0; }
+
+.app-footer { display: flex; justify-content: flex-end; margin-top: 12px; }
+.btn-text {
+  border: none;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.btn-text:hover { color: var(--danger); }
+.btn-text:disabled { opacity: 0.4; cursor: default; color: var(--muted); }
+
+@media (max-width: 480px) {
+  .app { margin: 0; border-radius: 0; padding: 16px; min-height: 100vh; }
+  .add-form { flex-wrap: wrap; }
+  .add-form input { flex-basis: 100%; }
+  .add-form select, .add-form .btn-primary { flex: 1; padding: 10px; }
+  .progress-cats { gap: 8px; }
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오늘의 할 일</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="app-header">
+      <h1>📝 오늘의 할 일</h1>
+      <p id="today" class="today"></p>
+    </header>
+
+    <section class="progress" aria-label="진행률">
+      <div class="progress-total">
+        <div class="progress-label">
+          <span>전체 진행률</span>
+          <span id="totalText"></span>
+        </div>
+        <div class="bar"><div id="totalBar" class="bar-fill"></div></div>
+      </div>
+      <ul id="categoryProgress" class="progress-cats"></ul>
+      <p id="emptyProgress" class="progress-empty" hidden>할 일을 추가해 보세요</p>
+    </section>
+
+    <form id="addForm" class="add-form">
+      <input id="addInput" type="text" maxlength="100" placeholder="할 일을 입력하세요..." aria-label="새 할 일" autocomplete="off">
+      <select id="addCategory" aria-label="카테고리">
+        <option value="work">업무</option>
+        <option value="personal">개인</option>
+        <option value="study">공부</option>
+      </select>
+      <button type="submit" class="btn-primary">추가</button>
+    </form>
+
+    <nav class="filters" role="tablist" aria-label="카테고리 필터">
+      <button type="button" role="tab" data-filter="all">전체</button>
+      <button type="button" role="tab" data-filter="work">업무</button>
+      <button type="button" role="tab" data-filter="personal">개인</button>
+      <button type="button" role="tab" data-filter="study">공부</button>
+    </nav>
+
+    <ul id="todoList" class="todo-list"></ul>
+    <p id="emptyList" class="empty" hidden></p>
+
+    <footer class="app-footer">
+      <button type="button" id="clearDone" class="btn-text">완료 항목 지우기</button>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
