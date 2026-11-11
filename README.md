@@ -3,15 +3,16 @@
 하루 10~20개의 할 일을 가볍게 관리하는 개인용 웹 앱입니다.
 설치나 로그인 없이 브라우저에서 바로 쓸 수 있고, 새로고침해도 데이터가 유지됩니다.
 
-**🔗 바로 사용하기**
+## 🔗 바로 사용하기
 
-| 앱 | 설명 | 주소 |
-|---|---|---|
-| todo-app | 처음 만든 앱 | https://lee-changyeon.github.io/todo-app/ |
-| todo-app2 | 새로 기획한 PRD로 다시 만든 앱 | https://lee-changyeon.github.io/todo-app/todo-app2/ |
-| todo-app3 | 5단계 프롬프트([PROMPTS.md](todo-app2/PROMPTS.md))로 만든 앱 | https://lee-changyeon.github.io/todo-app/todo-app3/ |
+| 앱 | 배포 주소 | 어떻게 만들었나 | 문서 |
+|---|---|---|---|
+| **todo-app** | [lee-changyeon.github.io/todo-app/](https://lee-changyeon.github.io/todo-app/) | 처음 만든 앱 | [PRD](PRD.md) · [TRD](TRD.md) · [TASKS](TASKS.md) |
+| **todo-app2** | [lee-changyeon.github.io/todo-app/todo-app2/](https://lee-changyeon.github.io/todo-app/todo-app2/) | 새로 기획한 PRD로 다시 만든 앱 | [PRD](todo-app2/PRD.md) · [TRD](todo-app2/TRD.md) · [TASKS](todo-app2/TASKS.md) |
+| **todo-app3** | [lee-changyeon.github.io/todo-app/todo-app3/](https://lee-changyeon.github.io/todo-app/todo-app3/) | todo-app2 PRD + [5단계 프롬프트](todo-app2/PROMPTS.md)로 만든 앱 | [TRD](todo-app3/TRD.md) · [TASKS](todo-app3/TASKS.md) (PRD는 todo-app2와 공유) |
 
-세 앱은 기능이 거의 같고, 저장 공간을 따로 써서 할 일이 서로 섞이지 않습니다.
+- 세 앱은 기능이 거의 같고, 저장 키(`todos` · `todos2` · `todos3`)가 달라 할 일이 서로 섞이지 않습니다.
+- 마지막 확인: 2026-11-11 — 세 주소 모두 정상 동작 (편집 관련 버그 수정 반영).
 
 ---
 
@@ -85,21 +86,24 @@ python -m http.server 5500 --directory todo-app
 
 ## 문서
 
+각 앱의 문서 링크는 맨 위 **바로 사용하기** 표에 있습니다. 문서 종류는 다음과 같습니다.
+
 | 문서 | 내용 |
 |---|---|
-| [PRD.md](PRD.md) | 무엇을 만드는가 — 목표, 사용자 스토리, 기능 요구사항, 수용 기준 |
-| [TRD.md](TRD.md) | 어떻게 만드는가 — 구조, 데이터 설계, 함수 설계, 테스트 결과 |
-| [TASKS.md](TASKS.md) | 작업 단위 체크리스트와 진행 현황 |
+| PRD | 무엇을 만드는가 — 목표, 사용자 스토리, 기능 요구사항, 수용 기준 |
+| TRD | 어떻게 만드는가 — 구조, 데이터 설계, 함수 설계, 테스트 결과, 수정 이력 |
+| TASKS | 작업 단위 체크리스트와 진행 현황 |
+| [PROMPTS](todo-app2/PROMPTS.md) | PRD로 앱을 만드는 5단계 프롬프트 (todo-app3 제작에 사용) |
 
 ## 배포
 
 `main` 브랜치에 push하면 GitHub Actions가 세 앱을 GitHub Pages에 자동으로 배포합니다.
 
-| 폴더 | 배포 경로 |
+| 폴더 | 배포 주소 |
 |---|---|
-| `todo-app/` | `/todo-app/` (사이트 루트) |
-| `todo-app2/` | `/todo-app/todo-app2/` |
-| `todo-app3/` | `/todo-app/todo-app3/` |
+| `todo-app/` | https://lee-changyeon.github.io/todo-app/ (사이트 루트) |
+| `todo-app2/` | https://lee-changyeon.github.io/todo-app/todo-app2/ |
+| `todo-app3/` | https://lee-changyeon.github.io/todo-app/todo-app3/ |
 
 `todo-app2/` · `todo-app3/`는 앱 파일 3개(`index.html`, `style.css`, `app.js`)만 배포되고 문서(`.md`)는 배포되지 않습니다.
 진행 상황은 저장소의 **Actions** 탭에서 확인할 수 있습니다.
@@ -112,4 +116,4 @@ python -m http.server 5500 --directory todo-app
 
 ## 앞으로 추가할 기능
 
-다크 모드, 삭제 실행 취소, JSON 백업/복원, 드래그 정렬, 마감일 · 우선순위 등 — 자세한 내용은 [TASKS.md](TASKS.md)의 M9를 참고하세요.
+다크 모드, 삭제 실행 취소, JSON 백업/복원, 드래그 정렬, 마감일 · 우선순위 등 — 자세한 내용은 각 앱 TASKS의 다음 버전 항목([todo-app](TASKS.md) M9 · [todo-app2](todo-app2/TASKS.md) M9 · [todo-app3](todo-app3/TASKS.md) M7)을 참고하세요.
